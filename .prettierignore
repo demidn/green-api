@@ -1,0 +1,14 @@
+node_modules
+.next
+dist
+build
+coverage
+delivery
+domains/messaging/data-access/api/generated
+docs
+design-reference
+AGENTS.md
+CLAUDE.md
+*.log
+*.tsbuildinfo
+pnpm-lock.yaml

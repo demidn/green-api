@@ -1,0 +1,152 @@
+openapi: 3.0.3
+info:
+  title: GREEN-API MAX GetChats
+  version: 1.0.0
+paths:
+  /waInstance{idInstance}/getChats/{apiTokenInstance}:
+    get:
+      operationId: listChatsApi
+      summary: List MAX chats
+      parameters:
+        - name: idInstance
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: apiTokenInstance
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Chats belonging to the instance
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ChatDto"
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+  /waInstance{idInstance}/sendMessage/{apiTokenInstance}:
+    post:
+      operationId: sendMessageApi
+      summary: Send a text message
+      parameters:
+        - name: idInstance
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: apiTokenInstance
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SendMessageDto"
+      responses:
+        "200":
+          description: Message accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SendMessageResponseDto"
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+  /waInstance{idInstance}/checkAccount/{apiTokenInstance}:
+    post:
+      operationId: checkAccountApi
+      summary: Check MAX account
+      parameters:
+        - name: idInstance
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: apiTokenInstance
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CheckAccountDto"
+      responses:
+        "200":
+          description: Account lookup result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CheckAccountResponseDto"
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+components:
+  schemas:
+    ChatDto:
+      type: object
+      required: [chatId, name, type, phoneNumber]
+      properties:
+        chatId:
+          type: string
+          description: Identifier of a user, group, channel, or bot chat
+        name:
+          type: string
+        type:
+          type: string
+          enum: [user, group, channel, bot]
+        phoneNumber:
+          type: integer
+          minimum: 0
+          description: Contact phone number; 0 means hidden or unavailable
+    SendMessageDto:
+      type: object
+      required: [chatId, message]
+      properties:
+        chatId:
+          type: string
+        message:
+          type: string
+          maxLength: 4000
+        typingTime:
+          type: integer
+          minimum: 1000
+        quotedMessageId:
+          type: string
+    SendMessageResponseDto:
+      type: object
+      required: [idMessage]
+      properties:
+        idMessage:
+          type: string
+    CheckAccountDto:
+      type: object
+      required: [phoneNumber]
+      properties:
+        phoneNumber:
+          type: integer
+          minimum: 1
+    CheckAccountResponseDto:
+      type: object
+      required: [exist, chatId]
+      properties:
+        exist:
+          type: boolean
+        chatId:
+          type: string
+        fromCache:
+          type: boolean

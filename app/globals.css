@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+@theme {
+  --breakpoint-desktop: 926px;
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, "Roboto", system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --color-canvas: #0f0f12;
+  --color-surface: #17181c;
+  --color-surface-secondary: #25262d;
+  --color-selected: #2c2d37;
+  --color-hover: #32343d;
+  --color-primary: #ffffff;
+  --color-secondary: #ffffffcc;
+  --color-tertiary: #ffffffa3;
+  --color-muted: #ffffff66;
+  --color-accent: #007aff;
+  --color-error: #ff4d67;
+  --color-divider: #ffffff0f;
+  --color-chat: #141414;
+  --color-chat-pattern: #505bc74d;
+  --color-incoming-start: #3b3f5e;
+  --color-incoming-mid: #373a4e;
+  --color-incoming-end: #32343d;
+  --color-outgoing-start: #8849b4;
+  --color-outgoing-mid: #735acd;
+  --color-outgoing-end: #5d6ae5;
+  --color-date: #282c42b2;
+  --color-avatar-start: #bf97ff;
+  --color-avatar-end: #526eff;
+  --text-message: 16px;
+  --text-message--line-height: 20px;
+  --text-detail: 15px;
+  --text-detail--line-height: 20px;
+  --text-meta: 13px;
+  --text-meta--line-height: 18px;
+  --text-caption: 12px;
+  --text-caption--line-height: 16px;
+  --text-label: 14px;
+  --text-label--line-height: 18px;
+  --text-heading: 24px;
+  --text-heading--line-height: 28px;
+  --radius-control: 12px;
+  --radius-bubble: 16px;
+  --radius-bubble-corner: 6px;
+  --radius-capsule: 10px;
+  --spacing-rail: 77px;
+  --spacing-sidebar: 393px;
+  --spacing-header: 65px;
+  --spacing-avatar: 64px;
+  --spacing-chat-row: 82px;
+  --spacing-history: 732px;
+  --spacing-composer: 740px;
+  --spacing-bubble: 480px;
+  --shadow-composer: 0 4px 16px #0000004d, 0 0 2px #0000004d;
+}
+
+:root {
+  color-scheme: dark;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  background: var(--color-canvas);
+  color: var(--color-primary);
+  font-family: var(--font-sans);
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-selected) transparent;
+}
+button:not(:disabled) {
+  cursor: pointer;
+}
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
+/* The desktop breakpoint is defined once in the theme above; below it the feature's active view selects the visible pane. */
+@media (max-width: 925px) {
+  [data-view="chats"] .messenger-content {
+    display: none;
+  }
+  [data-view="messages"] .messenger-sidebar {
+    display: none;
+  }
+}
