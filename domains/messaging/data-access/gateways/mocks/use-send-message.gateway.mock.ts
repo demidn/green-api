@@ -8,6 +8,6 @@ export function useSendMessageSuccessGateway() {
 
 export function useSendMessageServerErrorGateway() {
   return useCallback(async () => {
-    throw new Error("Internal Server Error");
+    throw new Error("Внутренняя ошибка сервера");
   }, []);
 }

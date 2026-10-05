@@ -9,19 +9,19 @@ export function MessageList() {
   return (
     <div
       role="region"
-      aria-label="Message history"
+      aria-label="История сообщений"
       tabIndex={0}
       className="relative flex min-h-0 flex-1 flex-col-reverse overflow-y-auto overscroll-contain"
     >
       <div className="mx-auto flex min-h-full w-full max-w-history shrink-0 flex-col justify-end px-1.5 pb-4 pt-2 desktop:px-4">
         {isLoading ? (
           <p role="status" className="px-4 py-6 text-detail text-tertiary">
-            Loading messages…
+            Загрузка сообщений…
           </p>
         ) : null}
         {error ? (
           <p role="alert" className="px-4 py-6 text-detail text-secondary">
-            Could not load messages: {error.message}.
+            Не удалось загрузить сообщения: {error.message}.
           </p>
         ) : null}
         {groups.map((group) => (

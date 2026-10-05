@@ -1,10 +1,11 @@
 import { atom } from "jotai";
+import type { Chat } from "@/domains/messaging/domain";
 import { greenApiConfigAtom } from "@/domains/messaging/feature-shared";
 
 export const settingsOpenAtom = atom(false);
 export const chatSearchQueryAtom = atom("");
-export const localChatsAtom = atom<import("@/domains/messaging/domain").Chat[]>([]);
 export const addChatOpenAtom = atom(false);
+export const selectedChatAtom = atom<Chat | null>(null);
 
 export type ActiveView = "chats" | "messages";
 

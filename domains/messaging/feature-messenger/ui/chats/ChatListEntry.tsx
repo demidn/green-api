@@ -4,7 +4,7 @@ import { Avatar } from "@/shared/ui/Avatar";
 import { useAtom, useSetAtom } from "jotai";
 import type { Chat } from "@/domains/messaging/domain";
 import { activeViewAtom } from "../../store/ui.atoms";
-import { selectedChatAtom } from "../../store/selected-chat.atom";
+import { selectedChatAtom } from "../../store/ui.atoms";
 
 interface ChatListEntryProps {
   chat: Chat;

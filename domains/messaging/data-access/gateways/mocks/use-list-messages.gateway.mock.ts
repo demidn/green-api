@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery, type UseQueryResult } from "@tanstack/react-query";
-import type { Message } from "@/domains/messaging/domain";
+import type { GreenApiConfig, Message } from "@/domains/messaging/domain";
 import { ApiError } from "../../api/api-error";
 import { messages } from "./messages";
 
@@ -10,11 +10,14 @@ export type ListMessagesGatewayResult = Pick<
   "data" | "error" | "isLoading" | "isFetching" | "refetch"
 >;
 
-export function useListMessagesSuccessGateway(chatId: string | null): ListMessagesGatewayResult {
+export function useListMessagesSuccessGateway(
+  _config: GreenApiConfig | null,
+  chatId: string | null,
+): ListMessagesGatewayResult {
   const query = useQuery<Message[], ApiError>({
     queryKey: ["messaging", "messages", "mock", "success", chatId],
     enabled: chatId !== null,
-    queryFn: async () => (chatId === "alex" ? messages : []),
+    queryFn: async () => (chatId === "alex" ? [...messages].reverse() : []),
     retry: false,
   });
 
@@ -27,12 +30,15 @@ export function useListMessagesSuccessGateway(chatId: string | null): ListMessag
   };
 }
 
-export function useListMessagesNotFoundGateway(chatId: string | null): ListMessagesGatewayResult {
+export function useListMessagesNotFoundGateway(
+  _config: GreenApiConfig | null,
+  chatId: string | null,
+): ListMessagesGatewayResult {
   const query = useQuery<Message[], ApiError>({
     queryKey: ["messaging", "messages", "mock", "404", chatId],
     enabled: chatId !== null,
     queryFn: async () => {
-      throw new ApiError(404, "Not Found");
+      throw new ApiError(404, "Не найдено");
     },
     retry: false,
   });
@@ -47,13 +53,14 @@ export function useListMessagesNotFoundGateway(chatId: string | null): ListMessa
 }
 
 export function useListMessagesServerErrorGateway(
+  _config: GreenApiConfig | null,
   chatId: string | null,
 ): ListMessagesGatewayResult {
   const query = useQuery<Message[], ApiError>({
     queryKey: ["messaging", "messages", "mock", "500", chatId],
     enabled: chatId !== null,
     queryFn: async () => {
-      throw new ApiError(500, "Internal Server Error");
+      throw new ApiError(500, "Внутренняя ошибка сервера");
     },
     retry: false,
   });

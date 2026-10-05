@@ -43,7 +43,7 @@ export function Navigation({ mobile = false }: { mobile?: boolean }) {
   if (mobile) {
     return (
       <nav
-        aria-label="Mobile navigation preview"
+        aria-label="Мобильная навигация"
         className="flex gap-2 border-t border-divider bg-surface px-3 pb-[max(10px,env(safe-area-inset-bottom))] pt-2.5"
       >
         {items.map((item) => (
@@ -59,7 +59,7 @@ export function Navigation({ mobile = false }: { mobile?: boolean }) {
   }
 
   return (
-    <nav aria-label="Navigation preview" className="flex h-full flex-col px-1 py-4">
+    <nav aria-label="Навигация" className="flex h-full flex-col px-1 py-4">
       <div className="space-y-2">
         <NavigationItem label="Все чаты" icon="chat" active />
       </div>

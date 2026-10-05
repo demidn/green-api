@@ -95,6 +95,106 @@ paths:
           description: Not Found
         "500":
           description: Internal Server Error
+  /waInstance{idInstance}/getChatHistory/{apiTokenInstance}:
+    post:
+      operationId: getChatHistoryApi
+      summary: Get chat message history
+      parameters:
+        - name: idInstance
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: apiTokenInstance
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GetChatHistoryDto"
+      responses:
+        "200":
+          description: Chat message history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/HistoryMessageDto"
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+  /waInstance{idInstance}/receiveNotification/{apiTokenInstance}:
+    get:
+      operationId: receiveNotificationApi
+      summary: Receive the next notification
+      parameters:
+        - name: idInstance
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: apiTokenInstance
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: receiveTimeout
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 5
+            maximum: 60
+      responses:
+        "200":
+          description: Next notification or empty response
+          content:
+            application/json:
+              schema:
+                nullable: true
+                allOf:
+                  - $ref: "#/components/schemas/NotificationEnvelopeDto"
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+  /waInstance{idInstance}/deleteNotification/{apiTokenInstance}/{receiptId}:
+    delete:
+      operationId: deleteNotificationApi
+      summary: Delete a received notification
+      parameters:
+        - name: idInstance
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: apiTokenInstance
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: receiptId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Notification deletion result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteNotificationResponseDto"
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
 components:
   schemas:
     ChatDto:
@@ -150,3 +250,49 @@ components:
           type: string
         fromCache:
           type: boolean
+    GetChatHistoryDto:
+      type: object
+      required: [chatId]
+      properties:
+        chatId:
+          type: string
+        count:
+          type: integer
+          minimum: 1
+    HistoryMessageDto:
+      type: object
+      required: [idMessage, chatId, timestamp, typeMessage]
+      properties:
+        idMessage:
+          type: string
+        chatId:
+          type: string
+        timestamp:
+          type: integer
+        typeMessage:
+          type: string
+        statusMessage:
+          type: string
+        senderId:
+          type: string
+        senderName:
+          type: string
+        textMessage:
+          type: string
+    NotificationEnvelopeDto:
+      type: object
+      required: [receiptId, body]
+      properties:
+        receiptId:
+          type: integer
+        body:
+          type: object
+          additionalProperties: true
+    DeleteNotificationResponseDto:
+      type: object
+      required: [result]
+      properties:
+        result:
+          type: boolean
+        reason:
+          type: string

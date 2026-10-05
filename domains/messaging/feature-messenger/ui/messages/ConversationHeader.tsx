@@ -2,7 +2,7 @@
 
 import { useAtomValue, useSetAtom } from "jotai";
 import { activeViewAtom } from "../../store/ui.atoms";
-import { selectedChatAtom } from "../../store/selected-chat.atom";
+import { selectedChatAtom } from "../../store/ui.atoms";
 import { Avatar } from "@/shared/ui/Avatar";
 import { IconButton } from "@/shared/ui/IconButton";
 

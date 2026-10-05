@@ -1,7 +1,7 @@
 "use client";
 
 import { useAtomValue } from "jotai";
-import { selectedChatAtom } from "../../store/selected-chat.atom";
+import { selectedChatAtom } from "../../store/ui.atoms";
 import { ConversationHeader } from "./ConversationHeader";
 import { MessageComposer } from "./MessageComposer";
 import { MessageList } from "./MessageList";

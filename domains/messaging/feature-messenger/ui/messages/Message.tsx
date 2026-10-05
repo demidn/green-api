@@ -2,7 +2,7 @@
 
 import { Icon } from "@/shared/ui/Icon";
 import type { MessageWithStatus } from "@/domains/messaging/domain";
-import { useMessagesStore } from "../../store/use-messages.store";
+import { useMessageActions } from "../../store/use-message-actions";
 
 interface MessageProps {
   item: MessageWithStatus;
@@ -11,7 +11,7 @@ interface MessageProps {
 }
 
 export function Message({ item, joinedBefore = false, joinedAfter = false }: MessageProps) {
-  const { retryMessage } = useMessagesStore();
+  const { retryMessage } = useMessageActions();
   const { message, localId, status } = item;
   const own = message.senderId === "me";
   const deliveryStatus = status ?? message.deliveryStatus;
@@ -26,7 +26,7 @@ export function Message({ item, joinedBefore = false, joinedAfter = false }: Mes
       <div
         className={`relative w-fit min-w-18 max-w-bubble rounded-bubble bg-linear-[239deg] px-2.5 pb-2.5 pt-2 desktop:max-w-[70%] ${corners} ${own ? "from-outgoing-start via-outgoing-mid to-outgoing-end" : "from-incoming-start via-incoming-mid to-incoming-end"}`}
       >
-        <span className="sr-only">{own ? "You: " : "Contact: "}</span>
+        <span className="sr-only">{own ? "Вы: " : "Контакт: "}</span>
         <p className="whitespace-pre-wrap text-message [overflow-wrap:anywhere]">
           {message.text}
           <span aria-hidden="true" className={`inline-block ${own ? "w-16" : "w-12"}`} />

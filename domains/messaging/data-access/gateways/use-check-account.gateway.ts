@@ -14,7 +14,7 @@ export function useCheckAccountGateway(config: GreenApiConfig | null) {
   return useCallback(
     async (phoneNumber: string): Promise<CheckAccountResult> => {
       if (!config) {
-        throw new ApiError(0, "API configuration is required");
+        throw new ApiError(0, "Требуется конфигурация API");
       }
       const result = await checkAccountApi(
         config.idInstance,

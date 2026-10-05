@@ -3,8 +3,8 @@ import { Providers } from "./Providers";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "MAX — Messenger demo",
-  description: "Static messenger UI with sample conversations.",
+  title: "MAX — Мессенджер",
+  description: "Мессенджер для общения через MAX.",
 };
 
 export const viewport: Viewport = {
@@ -16,7 +16,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className="antialiased">
+    <html lang="ru" className="antialiased">
       <body>
         <Providers>{children}</Providers>
       </body>

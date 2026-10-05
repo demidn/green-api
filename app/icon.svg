@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="max-gradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#42d9ff" />
+      <stop offset="1" stop-color="#6c35e8" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#max-gradient)" />
+  <path fill="#fff" d="M256 112c-77.3 0-140 57.3-140 128 0 30.6 12.2 58.6 32.8 80.8L130 400l89.9-38.1c11.4 4 23.5 6.1 36.1 6.1 77.3 0 140-57.3 140-128s-62.7-128-140-128Zm0 38c56.3 0 102 40.3 102 90s-45.7 90-102 90c-13.1 0-25.7-2.1-37.2-6l-34.6 14.7 7.8-31.2C177 291.6 154 267.5 154 240c0-49.7 45.7-90 102-90Z" />
+  <circle cx="256" cy="240" r="34" fill="url(#max-gradient)" />
+</svg>

@@ -1,70 +1,9 @@
 import type { OutboxMessage } from "./outbox.types";
-import type { Chat } from "@/domains/messaging/domain";
 import { MAXIMUM_SEND_ATTEMPTS } from "@/domains/messaging/domain";
-
-const databaseName = "green-api-max";
-const databaseVersion = 2;
-const outboxStoreName = "outbox";
-const chatsStoreName = "chats";
-let databasePromise: Promise<IDBDatabase> | null = null;
-
-function openDatabase(): Promise<IDBDatabase> {
-  if (databasePromise) {
-    return databasePromise;
-  }
-  databasePromise = new Promise((resolve, reject) => {
-    const request = indexedDB.open(databaseName, databaseVersion);
-    request.onerror = () => {
-      databasePromise = null;
-      reject(request.error);
-    };
-    request.onsuccess = () => {
-      const database = request.result;
-      database.onversionchange = () => {
-        database.close();
-        databasePromise = null;
-      };
-      resolve(database);
-    };
-    request.onupgradeneeded = () => {
-      const database = request.result;
-      if (!database.objectStoreNames.contains(outboxStoreName)) {
-        database.createObjectStore(outboxStoreName, { keyPath: "id" });
-      }
-      if (!database.objectStoreNames.contains(chatsStoreName)) {
-        database.createObjectStore(chatsStoreName, { keyPath: "id" });
-      }
-    };
-  });
-  return databasePromise;
-}
-
-export async function readChats(): Promise<Chat[]> {
-  const database = await openDatabase();
-  return new Promise((resolve, reject) => {
-    const request = database
-      .transaction(chatsStoreName, "readonly")
-      .objectStore(chatsStoreName)
-      .getAll();
-    request.onerror = () => reject(request.error);
-    request.onsuccess = () => resolve(request.result as Chat[]);
-  });
-}
-
-export async function writeChat(chat: Chat): Promise<void> {
-  const database = await openDatabase();
-  await new Promise<void>((resolve, reject) => {
-    const transaction = database.transaction(chatsStoreName, "readwrite");
-    const request = transaction.objectStore(chatsStoreName).put(chat);
-    request.onerror = () => reject(request.error);
-    transaction.oncomplete = () => resolve();
-    transaction.onerror = () => reject(transaction.error);
-    transaction.onabort = () => reject(transaction.error);
-  });
-}
+import { openMessagingDatabase, outboxStoreName } from "./database";
 
 export async function readOutbox(): Promise<OutboxMessage[]> {
-  const database = await openDatabase();
+  const database = await openMessagingDatabase();
   return new Promise((resolve, reject) => {
     const request = database
       .transaction(outboxStoreName, "readonly")
@@ -84,7 +23,7 @@ export async function readOutbox(): Promise<OutboxMessage[]> {
 }
 
 export async function writeOutboxItem(item: OutboxMessage): Promise<void> {
-  const database = await openDatabase();
+  const database = await openMessagingDatabase();
   await new Promise<void>((resolve, reject) => {
     const transaction = database.transaction(outboxStoreName, "readwrite");
     const request = transaction.objectStore(outboxStoreName).put(item);
@@ -99,7 +38,7 @@ export async function updateOutboxItem(
   id: string,
   change: Partial<OutboxMessage>,
 ): Promise<OutboxMessage | null> {
-  const database = await openDatabase();
+  const database = await openMessagingDatabase();
   return new Promise((resolve, reject) => {
     const transaction = database.transaction(outboxStoreName, "readwrite");
     const store = transaction.objectStore(outboxStoreName);
@@ -120,7 +59,7 @@ export async function updateOutboxItem(
 }
 
 export async function deleteOutboxItem(id: string): Promise<void> {
-  const database = await openDatabase();
+  const database = await openMessagingDatabase();
   await new Promise<void>((resolve, reject) => {
     const transaction = database.transaction(outboxStoreName, "readwrite");
     const request = transaction.objectStore(outboxStoreName).delete(id);
@@ -132,7 +71,7 @@ export async function deleteOutboxItem(id: string): Promise<void> {
 }
 
 export async function reconcileOutbox(remoteIds: Set<string>): Promise<string[]> {
-  const database = await openDatabase();
+  const database = await openMessagingDatabase();
   return new Promise((resolve, reject) => {
     const transaction = database.transaction(outboxStoreName, "readwrite");
     const store = transaction.objectStore(outboxStoreName);
@@ -157,7 +96,7 @@ export async function claimNextOutbox(
   owner: string,
   leaseDuration: number,
 ): Promise<OutboxMessage | null> {
-  const database = await openDatabase();
+  const database = await openMessagingDatabase();
   return new Promise((resolve, reject) => {
     const transaction = database.transaction(outboxStoreName, "readwrite");
     const store = transaction.objectStore(outboxStoreName);
@@ -206,7 +145,7 @@ export async function claimNextOutbox(
 }
 
 export async function getNextOutboxWakeAt(): Promise<number | null> {
-  const database = await openDatabase();
+  const database = await openMessagingDatabase();
   return new Promise((resolve, reject) => {
     const request = database
       .transaction(outboxStoreName, "readonly")

@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
-import { useMessagesStore } from "../../store/use-messages.store";
+import { useMessageActions } from "../../store/use-message-actions";
 import { IconButton } from "@/shared/ui/IconButton";
 import { logError } from "@/shared/logger";
 
 export function MessageComposer() {
   const [draft, setDraft] = useState("");
   const [sending, setSending] = useState(false);
-  const { enqueueMessage } = useMessagesStore();
+  const { sendMessage } = useMessageActions();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
     const element = textareaRef.current;
@@ -27,7 +27,7 @@ export function MessageComposer() {
     }
     setSending(true);
     try {
-      await enqueueMessage(text);
+      await sendMessage(text);
       setDraft("");
     } finally {
       setSending(false);
@@ -47,7 +47,7 @@ export function MessageComposer() {
       <div className="flex items-end rounded-bubble bg-surface p-1 shadow-composer">
         <textarea
           ref={textareaRef}
-          aria-label="Message draft"
+          aria-label="Черновик сообщения"
           placeholder="Сообщение"
           value={draft}
           onChange={(event) => setDraft(event.target.value)}

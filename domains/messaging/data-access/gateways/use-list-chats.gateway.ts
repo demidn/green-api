@@ -6,6 +6,7 @@ import { ApiError } from "../api/api-error";
 import { useListChatsApi } from "../api/generated/chats";
 import type { ChatDto } from "../api/generated/models";
 import { mapChatDto } from "../mappers/chat-dto.mapper";
+import { getChatsQueryKey } from "../cache/query-keys";
 
 export type ListChatsGatewayResult = Pick<
   UseQueryResult<Chat[], ApiError>,
@@ -16,7 +17,7 @@ function selectChats(dtos: ChatDto[]): Chat[] {
   try {
     return dtos.map(mapChatDto);
   } catch {
-    throw new ApiError(200, "Invalid API response");
+    throw new ApiError(200, "Некорректный ответ API");
   }
 }
 
@@ -28,13 +29,7 @@ export function useListChatsGateway(config?: GreenApiConfig | null): ListChatsGa
     {
       query: {
         // Include the runtime host and credentials: different instances must not share data.
-        queryKey: [
-          "messaging",
-          "chats",
-          config?.apiUrl,
-          config?.idInstance,
-          config?.apiTokenInstance,
-        ],
+        queryKey: configured && config ? getChatsQueryKey(config) : undefined,
         enabled: configured,
         select: selectChats,
         retry: false,

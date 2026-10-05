@@ -28,7 +28,7 @@ export function Chats() {
         <SearchInput value={searchQuery} onChange={setSearchQuery} />
       </header>
       <div
-        aria-label="Chat folders preview"
+        aria-label="Разделы чатов"
         className="flex h-10 shrink-0 items-stretch gap-6 border-b border-divider px-3 text-message font-medium text-tertiary desktop:hidden"
       >
         <span className="flex items-center border-b-2 border-accent text-accent">Все</span>

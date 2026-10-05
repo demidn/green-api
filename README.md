@@ -550,6 +550,21 @@ console.error
 
 В дальнейшем backend логирования можно заменить централизованно, например на Sentry, без массового изменения feature-кода.
 
+## Получение уведомлений
+
+Входящие уведомления получают через GREEN-API HTTP long polling:
+
+```text
+ReceiveNotification
+-> обработка
+-> DeleteNotification
+-> следующий ReceiveNotification
+```
+
+Обработчик последовательно принимает `incomingMessageReceived` и `outgoingMessageStatus`, инвалидирует историю выбранного чата и список чатов через TanStack Query, а затем уведомляет остальные вкладки через BroadcastChannel. Один активный receiver на origin выбирается через IndexedDB lease, поэтому при закрытии вкладки-лидера другая вкладка продолжает работу после истечения lease.
+
+Для HTTP API notifications в настройках GREEN-API должен быть установлен пустой `webhookUrl`, а нужные уведомления входящих сообщений и статусов исходящих сообщений должны быть включены.
+
 ## Форматирование
 
 Проверка:

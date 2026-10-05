@@ -9,7 +9,7 @@ export function ChatList({ chats }: ChatListProps) {
   return (
     <div
       role="region"
-      aria-label="Chat list"
+      aria-label="Список чатов"
       tabIndex={0}
       className="min-h-0 flex-1 overflow-y-auto overscroll-contain"
     >

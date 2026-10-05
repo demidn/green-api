@@ -29,7 +29,7 @@ export function useListChatsNotFoundGateway(
   const query = useQuery<Chat[], ApiError>({
     queryKey: ["messaging", "chats", "mock", "404"],
     queryFn: async () => {
-      throw new ApiError(404, "Not Found");
+      throw new ApiError(404, "Не найдено");
     },
     retry: false,
   });
@@ -49,7 +49,7 @@ export function useListChatsServerErrorGateway(
   const query = useQuery<Chat[], ApiError>({
     queryKey: ["messaging", "chats", "mock", "500"],
     queryFn: async () => {
-      throw new ApiError(500, "Internal Server Error");
+      throw new ApiError(500, "Внутренняя ошибка сервера");
     },
     retry: false,
   });

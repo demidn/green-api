@@ -16,7 +16,7 @@ export interface MessageGroupViewModel {
 export function useMessageListViewModel(messages: MessageWithStatus[]) {
   return useMemo(() => {
     const groups = new Map<string, MessageGroupViewModel>();
-    for (const item of messages) {
+    for (const item of [...messages].reverse()) {
       const date = item.message.date;
       const group = groups.get(date) ?? { id: date.toLowerCase(), date, messages: [] };
       const previous = group.messages[group.messages.length - 1];

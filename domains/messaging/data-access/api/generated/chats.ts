@@ -27,6 +27,11 @@ import type {
   ChatDto,
   CheckAccountDto,
   CheckAccountResponseDto,
+  DeleteNotificationResponseDto,
+  GetChatHistoryDto,
+  HistoryMessageDto,
+  NotificationEnvelopeDto,
+  ReceiveNotificationApiParams,
   SendMessageDto,
   SendMessageResponseDto
 } from './models';
@@ -340,4 +345,336 @@ export const useCheckAccountApi = <TError = void,
         TContext
       > => {
       return useMutation(getCheckAccountApiMutationOptions(options), queryClient);
+    }
+
+export const getGetChatHistoryApiUrl = (idInstance: string,
+    apiTokenInstance: string,) => {
+
+
+
+
+  return `/waInstance${idInstance}/getChatHistory/${apiTokenInstance}`
+}
+
+/**
+ * @summary Get chat message history
+ */
+export const getChatHistoryApi = async (idInstance: string,
+    apiTokenInstance: string,
+    getChatHistoryDto: GetChatHistoryDto, options?: Parameters<typeof greenApiFetch>[1]): Promise<HistoryMessageDto[]> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return greenApiFetch<HistoryMessageDto[]>(getGetChatHistoryApiUrl(idInstance,apiTokenInstance),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(getChatHistoryDto)
+  }
+);}
+
+
+
+
+
+export const getGetChatHistoryApiQueryKey = (idInstance: string,
+    apiTokenInstance: string,
+    getChatHistoryDto?: GetChatHistoryDto,) => {
+    return [
+    'POST', `/waInstance${idInstance}/getChatHistory/${apiTokenInstance}`, getChatHistoryDto
+    ] as const;
+    }
+
+
+export const getGetChatHistoryApiQueryOptions = <TData = Awaited<ReturnType<typeof getChatHistoryApi>>, TError = void>(idInstance: string,
+    apiTokenInstance: string,
+    getChatHistoryDto: GetChatHistoryDto, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getChatHistoryApi>>, TError, TData>>, request?: SecondParameter<typeof greenApiFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetChatHistoryApiQueryKey(idInstance,apiTokenInstance,getChatHistoryDto);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getChatHistoryApi>>> = ({ signal }) => getChatHistoryApi(idInstance,apiTokenInstance,getChatHistoryDto, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: idInstance !== null && idInstance !== undefined && apiTokenInstance !== null && apiTokenInstance !== undefined,  staleTime: 5000,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getChatHistoryApi>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetChatHistoryApiQueryResult = NonNullable<Awaited<ReturnType<typeof getChatHistoryApi>>>
+export type GetChatHistoryApiQueryError = void
+
+
+export function useGetChatHistoryApi<TData = Awaited<ReturnType<typeof getChatHistoryApi>>, TError = void>(
+ idInstance: string,
+    apiTokenInstance: string,
+    getChatHistoryDto: GetChatHistoryDto, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getChatHistoryApi>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getChatHistoryApi>>,
+          TError,
+          Awaited<ReturnType<typeof getChatHistoryApi>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof greenApiFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetChatHistoryApi<TData = Awaited<ReturnType<typeof getChatHistoryApi>>, TError = void>(
+ idInstance: string,
+    apiTokenInstance: string,
+    getChatHistoryDto: GetChatHistoryDto, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getChatHistoryApi>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getChatHistoryApi>>,
+          TError,
+          Awaited<ReturnType<typeof getChatHistoryApi>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof greenApiFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetChatHistoryApi<TData = Awaited<ReturnType<typeof getChatHistoryApi>>, TError = void>(
+ idInstance: string,
+    apiTokenInstance: string,
+    getChatHistoryDto: GetChatHistoryDto, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getChatHistoryApi>>, TError, TData>>, request?: SecondParameter<typeof greenApiFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get chat message history
+ */
+
+export function useGetChatHistoryApi<TData = Awaited<ReturnType<typeof getChatHistoryApi>>, TError = void>(
+ idInstance: string,
+    apiTokenInstance: string,
+    getChatHistoryDto: GetChatHistoryDto, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getChatHistoryApi>>, TError, TData>>, request?: SecondParameter<typeof greenApiFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetChatHistoryApiQueryOptions(idInstance,apiTokenInstance,getChatHistoryDto,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getReceiveNotificationApiUrl = (idInstance: string,
+    apiTokenInstance: string,
+    params?: ReceiveNotificationApiParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/waInstance${idInstance}/receiveNotification/${apiTokenInstance}?${stringifiedParams}` : `/waInstance${idInstance}/receiveNotification/${apiTokenInstance}`
+}
+
+/**
+ * @summary Receive the next notification
+ */
+export const receiveNotificationApi = async (idInstance: string,
+    apiTokenInstance: string,
+    params?: ReceiveNotificationApiParams, options?: Parameters<typeof greenApiFetch>[1]): Promise<NotificationEnvelopeDto | null> => {
+
+  return greenApiFetch<NotificationEnvelopeDto | null>(getReceiveNotificationApiUrl(idInstance,apiTokenInstance,params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getReceiveNotificationApiQueryKey = (idInstance: string,
+    apiTokenInstance: string,
+    params?: ReceiveNotificationApiParams,) => {
+    return [
+    `/waInstance${idInstance}/receiveNotification/${apiTokenInstance}`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getReceiveNotificationApiQueryOptions = <TData = Awaited<ReturnType<typeof receiveNotificationApi>>, TError = void>(idInstance: string,
+    apiTokenInstance: string,
+    params?: ReceiveNotificationApiParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof receiveNotificationApi>>, TError, TData>>, request?: SecondParameter<typeof greenApiFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getReceiveNotificationApiQueryKey(idInstance,apiTokenInstance,params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof receiveNotificationApi>>> = ({ signal }) => receiveNotificationApi(idInstance,apiTokenInstance,params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: idInstance !== null && idInstance !== undefined && apiTokenInstance !== null && apiTokenInstance !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof receiveNotificationApi>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type ReceiveNotificationApiQueryResult = NonNullable<Awaited<ReturnType<typeof receiveNotificationApi>>>
+export type ReceiveNotificationApiQueryError = void
+
+
+export function useReceiveNotificationApi<TData = Awaited<ReturnType<typeof receiveNotificationApi>>, TError = void>(
+ idInstance: string,
+    apiTokenInstance: string,
+    params: undefined |  ReceiveNotificationApiParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof receiveNotificationApi>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof receiveNotificationApi>>,
+          TError,
+          Awaited<ReturnType<typeof receiveNotificationApi>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof greenApiFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useReceiveNotificationApi<TData = Awaited<ReturnType<typeof receiveNotificationApi>>, TError = void>(
+ idInstance: string,
+    apiTokenInstance: string,
+    params?: ReceiveNotificationApiParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof receiveNotificationApi>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof receiveNotificationApi>>,
+          TError,
+          Awaited<ReturnType<typeof receiveNotificationApi>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof greenApiFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useReceiveNotificationApi<TData = Awaited<ReturnType<typeof receiveNotificationApi>>, TError = void>(
+ idInstance: string,
+    apiTokenInstance: string,
+    params?: ReceiveNotificationApiParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof receiveNotificationApi>>, TError, TData>>, request?: SecondParameter<typeof greenApiFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Receive the next notification
+ */
+
+export function useReceiveNotificationApi<TData = Awaited<ReturnType<typeof receiveNotificationApi>>, TError = void>(
+ idInstance: string,
+    apiTokenInstance: string,
+    params?: ReceiveNotificationApiParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof receiveNotificationApi>>, TError, TData>>, request?: SecondParameter<typeof greenApiFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getReceiveNotificationApiQueryOptions(idInstance,apiTokenInstance,params,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getDeleteNotificationApiUrl = (idInstance: string,
+    apiTokenInstance: string,
+    receiptId: number,) => {
+
+
+
+
+  return `/waInstance${idInstance}/deleteNotification/${apiTokenInstance}/${receiptId}`
+}
+
+/**
+ * @summary Delete a received notification
+ */
+export const deleteNotificationApi = async (idInstance: string,
+    apiTokenInstance: string,
+    receiptId: number, options?: Parameters<typeof greenApiFetch>[1]): Promise<DeleteNotificationResponseDto> => {
+
+  return greenApiFetch<DeleteNotificationResponseDto>(getDeleteNotificationApiUrl(idInstance,apiTokenInstance,receiptId),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+
+export const getDeleteNotificationApiMutationKey = () => ['deleteNotificationApi'] as const;
+
+export const getDeleteNotificationApiMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteNotificationApi>>, TError,DeleteNotificationApiMutationVariables, TContext>, request?: SecondParameter<typeof greenApiFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteNotificationApi>>, TError,DeleteNotificationApiMutationVariables, TContext> => {
+
+const mutationKey = getDeleteNotificationApiMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteNotificationApi>>, DeleteNotificationApiMutationVariables> = (props) => {
+          const {idInstance,apiTokenInstance,receiptId} = props ?? {};
+
+          return  deleteNotificationApi(idInstance,apiTokenInstance,receiptId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteNotificationApiMutationResult = NonNullable<Awaited<ReturnType<typeof deleteNotificationApi>>>
+
+    export type DeleteNotificationApiMutationError = void
+    export type DeleteNotificationApiMutationVariables = {idInstance: string;apiTokenInstance: string;receiptId: number}
+
+    /**
+ * @summary Delete a received notification
+ */
+export const useDeleteNotificationApi = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteNotificationApi>>, TError,DeleteNotificationApiMutationVariables, TContext>, request?: SecondParameter<typeof greenApiFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof deleteNotificationApi>>,
+        TError,
+        DeleteNotificationApiMutationVariables,
+        TContext
+      > => {
+      return useMutation(getDeleteNotificationApiMutationOptions(options), queryClient);
     }

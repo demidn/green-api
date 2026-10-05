@@ -1,22 +1,27 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { addChatOpenAtom, activeViewAtom } from "../../store/ui.atoms";
-import { selectedChatAtom } from "../../store/selected-chat.atom";
+import { selectedChatAtom } from "../../store/ui.atoms";
 import { useChatsStore } from "../../store/use-chats.store";
 
 export function AddChatDialog() {
-  const [open, setOpen] = useAtom(addChatOpenAtom);
+  const open = useAtomValue(addChatOpenAtom);
+  if (!open) {
+    return null;
+  }
+  return <AddChatDialogContent />;
+}
+
+function AddChatDialogContent() {
+  const [, setOpen] = useAtom(addChatOpenAtom);
   const [, setSelectedChat] = useAtom(selectedChatAtom);
   const [, setActiveView] = useAtom(activeViewAtom);
   const { addChatByPhone } = useChatsStore();
   const [phone, setPhone] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  if (!open) {
-    return null;
-  }
   async function submit(event: FormEvent) {
     event.preventDefault();
     const normalized = phone.replace(/\D/g, "");

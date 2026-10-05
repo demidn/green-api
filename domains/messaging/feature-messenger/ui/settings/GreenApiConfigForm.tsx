@@ -40,45 +40,47 @@ export function GreenApiConfigForm() {
       })}
     >
       <TextBox
-        label="API URL"
+        label="URL API"
         type="url"
         autoFocus
         autoComplete="url"
         error={errors.apiUrl?.message}
         {...register("apiUrl", {
-          required: "Enter the API URL.",
+          required: "Введите URL API.",
           setValueAs: (value: string) => value.trim(),
           validate: (value) => {
             try {
               const url = new URL(value);
-              return ["http:", "https:"].includes(url.protocol) || "Use an HTTP or HTTPS URL.";
+              return (
+                ["http:", "https:"].includes(url.protocol) || "Используйте URL HTTP или HTTPS."
+              );
             } catch {
-              return "Enter a valid HTTP or HTTPS URL.";
+              return "Введите корректный URL HTTP или HTTPS.";
             }
           },
         })}
       />
       <TextBox
-        label="ID Instance"
+        label="ID экземпляра"
         autoComplete="off"
         error={errors.idInstance?.message}
         {...register("idInstance", {
-          required: "Enter the instance ID.",
+          required: "Введите ID экземпляра.",
           setValueAs: (value: string) => value.trim(),
         })}
       />
       <TextBox
-        label="API Token Instance"
+        label="Токен API"
         type="password"
         autoComplete="off"
         error={errors.apiTokenInstance?.message}
         {...register("apiTokenInstance", {
-          required: "Enter the API token.",
+          required: "Введите токен API.",
           setValueAs: (value: string) => value.trim(),
         })}
       />
       <Button type="submit" disabled={isSubmitting} className="w-full">
-        Save and continue
+        Сохранить и продолжить
       </Button>
     </form>
   );

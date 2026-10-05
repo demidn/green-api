@@ -18,7 +18,7 @@ export function useSendMessageGateway(config: GreenApiConfig | null) {
   return useCallback(
     async (input: SendMessageInput, signal?: AbortSignal): Promise<SentMessage> => {
       if (!config) {
-        throw new ApiError(0, "API configuration is required");
+        throw new ApiError(0, "Требуется конфигурация API");
       }
       const result = await sendMessageApi(config.idInstance, config.apiTokenInstance, input, {
         apiUrl: config.apiUrl,

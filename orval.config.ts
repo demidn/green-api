@@ -16,6 +16,15 @@ export default defineConfig({
           name: "greenApiFetch",
         },
         fetch: { includeHttpResponseReturnType: false },
+        operations: {
+          getChatHistoryApi: {
+            query: {
+              useQuery: true,
+              useMutation: false,
+              options: { staleTime: 5_000 },
+            },
+          },
+        },
       },
     },
   },
